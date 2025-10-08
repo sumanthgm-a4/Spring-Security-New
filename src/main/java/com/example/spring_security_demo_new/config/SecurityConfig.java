@@ -20,10 +20,16 @@ public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    // ✅ Bean for password encoder
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(BCryptPasswordEncoder encoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+        provider.setPasswordEncoder(encoder);
 
         return provider;
     }
@@ -49,8 +55,4 @@ public class SecurityConfig {
     //     return new InMemoryUserDetailsManager(user1);
     // }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder(12);
-    }
 }
